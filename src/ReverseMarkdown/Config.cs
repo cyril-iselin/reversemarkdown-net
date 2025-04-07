@@ -7,13 +7,17 @@ namespace ReverseMarkdown
     {
         public UnknownTagsOption UnknownTags { get; set; } = UnknownTagsOption.PassThrough;
 
-        public bool GithubFlavored { get; set; } = false;
+        public bool GithubFlavored { get; set; } = true;
 
         public bool SlackFlavored { get; set; } = false;
 
         public bool SuppressDivNewlines { get; set; } = false;
 
         public bool RemoveComments { get; set; } = false;
+
+        public bool NormalizeSpaceChars { get; set; } = false;
+
+        public bool DisableLineBreaksWhenInsideFormattingTags { get; set; } = false;
 
         /// <summary>
         /// Specify which schemes (without trailing colon) are to be allowed for &lt;a&gt; and &lt;img&gt; tags. Others will be bypassed. By default allows everything.
@@ -98,8 +102,11 @@ namespace ReverseMarkdown
         /// </summary>
         public bool TableHeaderColumnSpanHandling { get; set; } = true;
 
-        public bool CleanupUnnecessarySpaces { get; set; } = true;
+        public bool CleanupUnnecessarySpaces { get; set; } = false;
 
+        public bool CleanupMultipleNewLines { get; set; } = false;
+
+        public bool CleanupTagBorders { get; set; } = true;
 
         /// <summary>
         /// Determines whether url is allowed: WhitelistUriSchemes contains no elements or contains passed url.

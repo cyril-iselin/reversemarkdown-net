@@ -8,7 +8,7 @@ namespace ReverseMarkdown
     {
         private static readonly Regex SlackBoldCleaner = new Regex(@"\*(\s\*)+");
         private static readonly Regex SlackItalicCleaner = new Regex(@"_(\s_)+");
-        
+
         private static string CleanTagBorders(string content)
         {
             // content from some htl editors such as CKEditor emits newline and tab between tags, clean that up
@@ -24,10 +24,17 @@ namespace ReverseMarkdown
             return content;
         }
 
-        public static string PreTidy(string content, bool removeComments)
+        public static string PreTidy(string content, bool normalizeSpaceChars, bool cleanupTagBorders)
         {
-            content = NormalizeSpaceChars(content);
-            content = CleanTagBorders(content);
+            if (normalizeSpaceChars)
+            {
+                content = NormalizeSpaceChars(content);
+            }
+
+            if (cleanupTagBorders)
+            {
+                content = CleanTagBorders(content);
+            }
 
             return content;
         }
@@ -38,7 +45,7 @@ namespace ReverseMarkdown
             // next to word characters or not.
             content = SlackBoldCleaner.Replace(content, "*");
             content = SlackItalicCleaner.Replace(content, "_");
-            
+
             return content;
         }
     }

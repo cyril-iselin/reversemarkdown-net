@@ -15,7 +15,7 @@ namespace ReverseMarkdown.Converters
             var indent = new string(' ', 4);
             var prefix = $"{Converter.Config.ListBulletChar} ";
             var content = TreatChildren(node);
-            return $"{indent}{prefix}{content.Chomp()}{Environment.NewLine}";
+            return $"{indent}{prefix}{content.Chomp()}";
         }
     }    
 }

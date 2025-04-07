@@ -15,9 +15,9 @@ namespace ReverseMarkdown
         protected readonly IConverter DropTagsConverter;
         protected readonly IConverter ByPassTagsConverter;
 
-        public Converter() : this(new Config()) {}
+        public Converter() : this(new Config()) { }
 
-        public Converter(Config config) : this(config, null) {}
+        public Converter(Config config) : this(config, null) { }
 
         public Converter(Config config, params Assembly[] additionalAssemblies)
         {
@@ -76,7 +76,7 @@ namespace ReverseMarkdown
 
         public virtual string Convert(string html)
         {
-            html = Cleaner.PreTidy(html, Config.RemoveComments);
+            html = Cleaner.PreTidy(html, Config.NormalizeSpaceChars, Config.CleanupTagBorders);
 
             var doc = new HtmlDocument();
             doc.LoadHtml(html);
@@ -91,14 +91,17 @@ namespace ReverseMarkdown
 
             var result = Lookup(root.Name).Convert(root);
 
-            // cleanup multiple new lines
-            result = Regex.Replace( result, @"(^\p{Zs}*(\r\n|\n)){2,}", Environment.NewLine, RegexOptions.Multiline);
+            if (Config.CleanupMultipleNewLines)
+            {
+                // cleanup multiple new lines
+                result = Regex.Replace(result, @"(^\p{Zs}*(\r\n|\n)){2,}", Environment.NewLine, RegexOptions.Multiline);
+            }
 
             if (Config.SlackFlavored)
             {
                 result = Cleaner.SlackTidy(result);
             }
-            
+
             return Config.CleanupUnnecessarySpaces ? result.Trim().FixMultipleNewlines() : result;
         }
 

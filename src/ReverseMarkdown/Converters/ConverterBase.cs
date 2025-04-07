@@ -17,12 +17,18 @@ namespace ReverseMarkdown.Converters
         {
             var result = string.Empty;
 
+            string result1 = result;
+            foreach (var childNode in node.ChildNodes)
+            {
+                result1 = result1 + Treat(childNode);
+            }
             return !node.HasChildNodes
                 ? result
-                : node.ChildNodes.Aggregate(result, (current, nd) => current + Treat(nd));
+                : result1;
         }
 
-        private string Treat(HtmlNode node) {
+        private string Treat(HtmlNode node)
+        {
             // TrimNewLine(node);
             var converter = Converter.Lookup(node.Name);
             return converter.Convert(node);
@@ -53,7 +59,7 @@ namespace ReverseMarkdown.Converters
             return System.Net.WebUtility.HtmlDecode(html);
         }
 
-        protected static string IndentationFor(HtmlNode node, bool zeroIndex=false)
+        protected static string IndentationFor(HtmlNode node, bool zeroIndex = false)
         {
             var length = node.Ancestors("ol").Count() + node.Ancestors("ul").Count();
 

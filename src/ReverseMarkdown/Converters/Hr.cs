@@ -17,7 +17,7 @@ namespace ReverseMarkdown.Converters
                 throw new SlackUnsupportedTagException(node.Name);
             }
             
-            return $"{Environment.NewLine}* * *{Environment.NewLine}";
+            return "---";
         }
     }
 }

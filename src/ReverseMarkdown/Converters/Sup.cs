@@ -18,12 +18,12 @@ namespace ReverseMarkdown.Converters
             }
             
             var content = TreatChildren(node);
-            if (string.IsNullOrEmpty(content) || AlreadySup(node))
+            if (string.IsNullOrWhiteSpace(content) || AlreadySup(node))
             {
                 return content;
             }
 
-            return $"^{content.Chomp(all:true)}^";
+            return $"^{content}^";
         }
 
         private static bool AlreadySup(HtmlNode node)

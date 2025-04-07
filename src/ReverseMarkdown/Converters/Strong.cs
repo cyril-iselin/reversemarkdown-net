@@ -18,17 +18,13 @@ namespace ReverseMarkdown.Converters
         public override string Convert(HtmlNode node)
         {
             var content = TreatChildren(node);
-            if (string.IsNullOrEmpty(content) || AlreadyBold(node))
+            if (string.IsNullOrWhiteSpace(content) || AlreadyBold(node))
             {
                 return content;
             }
             
-            var spaceSuffix = (node.NextSibling?.Name == "strong" || node.NextSibling?.Name == "b")
-                ? " "
-                : "";
-
             var emphasis = Converter.Config.SlackFlavored ? "*" : "**";
-            return content.EmphasizeContentWhitespaceGuard(emphasis, spaceSuffix);
+            return $"{emphasis}{content}{emphasis}";
         }
 
         private static bool AlreadyBold(HtmlNode node)

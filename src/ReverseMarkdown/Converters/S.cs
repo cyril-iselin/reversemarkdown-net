@@ -15,13 +15,13 @@ namespace ReverseMarkdown.Converters
         public override string Convert(HtmlNode node)
         {
             var content = TreatChildren(node);
-            if (string.IsNullOrEmpty(content) || AlreadyStrikethrough(node))
+            if (string.IsNullOrWhiteSpace(content) || AlreadyStrikethrough(node))
             {
                 return content;
             }
 
             var emphasis = Converter.Config.SlackFlavored ? "~" : "~~";
-            return content.EmphasizeContentWhitespaceGuard(emphasis);
+            return $"{emphasis}{content}{emphasis}";
         }
 
         private static bool AlreadyStrikethrough(HtmlNode node)

@@ -21,17 +21,13 @@ namespace ReverseMarkdown.Converters
         {
             var content = TreatChildren(node);
 
-            if (string.IsNullOrEmpty(content.Trim()) || AlreadyItalic(node))
+            if (string.IsNullOrWhiteSpace(content.Trim()) || AlreadyItalic(node))
             {
                 return content;
             }
 
-            var spaceSuffix = (node.NextSibling?.Name == "i" || node.NextSibling?.Name == "em")
-                ? " "
-                : "";
-
             var emphasis = Converter.Config.SlackFlavored ? "_" : "*";
-            return content.EmphasizeContentWhitespaceGuard(emphasis, spaceSuffix);
+            return $"{emphasis}{content}{emphasis}";
         }
 
         private static bool AlreadyItalic(HtmlNode node)
