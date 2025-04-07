@@ -19,6 +19,56 @@ namespace ReverseMarkdown.Test
             _verifySettings.DisableRequireUniquePrefix();
         }
 
+        [Theory]
+        [InlineData("Line1<br>Line2", "Line1NEWLINELine2")]
+        [InlineData("Line1<br><br>Line2", "Line1NEWLINENEWLINELine2")]
+        [InlineData("Line1<br/>Line2", "Line1NEWLINELine2")]
+        [InlineData("Start<br>Middle<br/>End", "StartNEWLINEMiddleNEWLINEEnd")]
+        [InlineData("No breaks here", "No breaks here")]
+        [InlineData("Die <strong> </strong>a", "Die  a")]
+        [InlineData("Die <strong>\t</strong>a", "Die \ta")]
+        [InlineData("Die <strong></strong> a", "Die  a")]
+        [InlineData("Die <a href=''></a> a", "Die  a")]
+        [InlineData("der Auftraggeberin ausgeführt und verrechnet.äöüÄÖÜ", "der Auftraggeberin ausgeführt und verrechnet.äöüÄÖÜ")]
+        [InlineData("Die <strong>Hallo Welt</strong>", "Die **Hallo Welt**")]
+        [InlineData("Die <strong>Hallo Welt</strong> <i>Test</i>", "Die **Hallo Welt** *Test*")]
+        [InlineData("One<i>      </i>Two <strong>      </strong>Three", "One      Two       Three")]
+        [InlineData("<i><strong>bold and italic</strong></i>", "***bold and italic***")]
+        [InlineData("<strong><i>bold and italic</i></strong>", "***bold and italic***")]
+        [InlineData("<strong>test ich <em>habe </em>hunger</strong>", "**test ich *habe* hunger**")]
+        [InlineData("<em><b>bold and italic</b></em>", "***bold and italic***")]
+        [InlineData("<b><em>bold and italic</em></b>", "***bold and italic***")]
+        [InlineData("<strong>bold</strong>", "**bold**")]
+        [InlineData("<b>bold</b>", "**bold**")]
+        [InlineData("<i>italic</i>", "*italic*")]
+        [InlineData("<em>italic</em>", "*italic*")]
+        [InlineData("<b>1</b><i>2</i><em>3</em><strong>4</strong>", "**1***2* *3***4**")]
+        [InlineData("<b>1 </b><i>2 </i><em>3 </em><strong>4 </strong>", "**1** *2* *3* **4** ")]
+        [InlineData("<b>Text <br/> More</b>", "**Text** NEWLINE **More**")]
+        [InlineData("Text<br><table><tr><td>A</td></tr></table><br>End", "TextNEWLINE| A |NEWLINE| --- |NEWLINEEnd")]
+        [InlineData("<b>äöü</b>", "**äöü**")]
+        [InlineData("Line1<br><hr><br/>Line2", "Line1NEWLINE---NEWLINELine2")]
+        [InlineData("<i><strong> A </strong></i>", " ***A*** ")]
+        [InlineData("<b><i></i></b>", "")]
+        [InlineData("<strong><em>  </em></strong>", "  ")]
+        [InlineData("Super duper<br><b>Yeah</b>", "Super duperNEWLINE**Yeah**")]
+        [InlineData("<b><b></b></b>", "")]
+        [InlineData("<b><b>   </b></b>", "   ")]
+        [InlineData("<b><b>test</b></b>", "**test**")]
+        [InlineData("<b><b> test <br></b><br/></b>", " **test** NEWLINENEWLINE")]
+        [InlineData("<b><br></b>","NEWLINE")]
+        [InlineData("<ttt>Hallo</ttt>", "<ttt>Hallo</ttt>")]
+        [InlineData("<strong>test</strong><br><strong>test<br><br>fdsf<br>fds<br><br class=\"k-br\"></strong><br><strong>test</strong><br><br class=\"k-br\">", "**test**NEWLINE**test**NEWLINENEWLINE**fdsf**NEWLINE**fds**NEWLINENEWLINENEWLINE**test**NEWLINENEWLINE")]
+        [InlineData("<b>HALLO<br/>TEST</b>", "**HALLO**NEWLINE**TEST**")]
+        [InlineData("<em>xyz</em><br><em><strong>xxx</strong></em><br><strong><em>aaa</em><br><br class=\"k-br\"></strong><br><em>bbb</em>", "*xyz*NEWLINE***xxx***NEWLINE***aaa***NEWLINENEWLINENEWLINE*bbb*")]
+        [InlineData("<strong>tes</strong>tes<span style=\"font-weight: bolder;\">t</span>est<strong>tset</strong><br>tes<strong>t</strong>est<br>testest<br>test<br><br class=\"k-br\">", "**tes**testest**tset**NEWLINEtes**t**estNEWLINEtestestNEWLINEtestNEWLINENEWLINE")]
+        public void Convert_ReturnsExpectedResult(string input, string expected)
+        {
+            var converter = new Converter(new Config());
+            var result = converter.Convert(input);
+            Assert.Equal(expected.Replace("NEWLINE", Environment.NewLine), result);
+        }
+
         [Fact]
         public Task WhenThereIsAsideTag()
         {

@@ -13,13 +13,15 @@ namespace ReverseMarkdown.Converters
 
         public override string Convert(HtmlNode node)
         {
-            var parentName = node.ParentNode.Name.ToLowerInvariant();
-            var parentList = new string[] {"strong", "b", "em", "i"};
-            if (parentList.Contains(parentName))
+            if (Converter.Config.DisableLineBreaksWhenInsideFormattingTags)
             {
-                return "";
+                var parentName = node.ParentNode.Name.ToLowerInvariant();
+                var parentList = new[] { "strong", "b", "em", "i" };
+                if (parentList.Contains(parentName))
+                {
+                    return string.Empty;
+                }
             }
-
             return Converter.Config.GithubFlavored ? Environment.NewLine : $"  {Environment.NewLine}";
         }
     }

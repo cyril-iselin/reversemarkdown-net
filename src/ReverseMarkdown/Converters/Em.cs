@@ -21,7 +21,7 @@ namespace ReverseMarkdown.Converters
         {
             var content = TreatChildren(node);
 
-            if (string.IsNullOrEmpty(content.Trim()) || AlreadyItalic(node))
+            if (string.IsNullOrWhiteSpace(content.Trim()) || AlreadyItalic(node))
             {
                 return content;
             }

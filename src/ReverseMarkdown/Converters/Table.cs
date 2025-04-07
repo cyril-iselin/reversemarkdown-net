@@ -27,7 +27,7 @@ namespace ReverseMarkdown.Converters
                 ? EmptyHeader(node)
                 : string.Empty;
 
-            return $"{Environment.NewLine}{Environment.NewLine}{emptyHeaderRow}{TreatChildren(node)}{Environment.NewLine}";
+            return $"{emptyHeaderRow}{TreatChildren(node)}".TrimEnd('\r', '\n');
         }
 
         private static bool HasNoTableHeaderRow(HtmlNode node)

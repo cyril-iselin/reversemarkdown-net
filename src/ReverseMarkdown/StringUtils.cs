@@ -8,7 +8,7 @@ namespace ReverseMarkdown
 {
     public static class StringUtils
     {
-        public static string Chomp(this string content, bool all=false)
+        public static string Chomp(this string content, bool all = false)
         {
             if (all)
             {
@@ -27,6 +27,14 @@ namespace ReverseMarkdown
             using (var sr = new StringReader(content))
                 while ((line = sr.ReadLine()) != null)
                     yield return line;
+        }
+
+        public static string EmphasizeContentWhitespaceGuard(this string content, string emphasis, string nextSiblingSpaceSuffix = "")
+        {
+            var leadingSpaces = new string(' ', content.LeadingSpaceCount());
+            var trailingSpaces = new string(' ', content.TrailingSpaceCount());
+
+            return $"{leadingSpaces}{emphasis}{content.Chomp(all: true)}{emphasis}{(trailingSpaces.Length > 0 ? trailingSpaces : nextSiblingSpaceSuffix)}";
         }
 
         /// <summary>
@@ -78,7 +86,7 @@ namespace ReverseMarkdown
                 .DistinctBy(styleParts => styleParts[0])
                 .ToDictionary(styleParts => styleParts[0], styleParts => styleParts[1]);
         }
-        
+
         public static int LeadingSpaceCount(this string content)
         {
             var leadingSpaces = 0;
@@ -113,14 +121,6 @@ namespace ReverseMarkdown
             return trailingSpaces;
         }
 
-        public static string EmphasizeContentWhitespaceGuard(this string content, string emphasis, string nextSiblingSpaceSuffix="")
-        {
-            var leadingSpaces = new string(' ', content.LeadingSpaceCount());
-            var trailingSpaces = new string(' ', content.TrailingSpaceCount());
-
-            return $"{leadingSpaces}{emphasis}{content.Chomp(all:true)}{emphasis}{(trailingSpaces.Length > 0 ? trailingSpaces : nextSiblingSpaceSuffix)}";
-        }
-        
         public static string FixMultipleNewlines(this string markdown)
         {
             var normalizedMarkdown = Regex.Replace(markdown, @"\r\n|\r|\n", Environment.NewLine);
